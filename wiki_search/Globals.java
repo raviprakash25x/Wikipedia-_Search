@@ -6,6 +6,10 @@ import java.util.Set;
 public class Globals {
 	static String xml_file_path;
 	static Set<String> stopwords;
+	static int levelLimit = 100;
+	static char topLevel = 'A';
+	//TODO change
+	static int docCount = 5311;
 	static String outFilePath = "//home//ravi//Documents//IRE//indexFiles//";
 	static String[] stpWrdArr={ "without", "see", "unless", "due", "also", "must", "might", "like", "]", "[", "}", "{",
 			"<", ">", "?", "\"", "\\", "/", ")", "(", "will", "may", "can", "much", "every", "the", "in", "other",

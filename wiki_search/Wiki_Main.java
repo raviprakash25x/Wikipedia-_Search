@@ -1,9 +1,6 @@
 package wiki_search;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Wiki_Main {
@@ -14,6 +11,7 @@ public class Wiki_Main {
 			System.exit(1);
 		}
 		//System.out.println(Globals.xml_file_path);
+		Globals.populateStopWords();
 
 		while(true) {
 			int choice = menu();
@@ -21,7 +19,6 @@ public class Wiki_Main {
 			switch (choice) {
 			case 1:
 				Globals.xml_file_path = args[0];
-				Globals.populateStopWords();
 				generateIndex();
 				break;
 
@@ -38,6 +35,8 @@ public class Wiki_Main {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			System.out.print("\nEnter Search query: ");
 			String query = br.readLine();
+			Search search = new Search();
+			search.searchQuery(query);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -61,8 +60,8 @@ public class Wiki_Main {
 
 	private static void generateIndex() {
 		Engine engine = new Engine();
-		engine.parseXML();
-		engine.mergeIndexes();
-
+		//engine.parseXML();
+		//engine.mergeIndexes();
+		engine.createLevels();
 	}
 }

@@ -1,7 +1,6 @@
 package wiki_search;
 
 import java.io.PrintWriter;
-import java.nio.channels.FileChannel.MapMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+
 import org.tartarus.snowball.ext.englishStemmer;
 
 public class PreProcess {
@@ -24,16 +24,19 @@ public class PreProcess {
 	int processPage(String id, String title, String body, boolean isLast) {
 		if(isLast) {
 			writeToFile();
+			treeMap.clear();
+			Globals.docCount = count;
 			return 0;
 		}
 		body = cleanBody(body);
-		System.out.println(body);
+		//System.out.println(body);
 		//System.out.println(count+" "+body.substring(0, Math.min(100, body.length())));
 		tokenizeBody(body);
 		tokenizeTitle(title);
 		//stemWords();
 		addToTreeMap(id);
 		//System.out.println(count);
+		count++;
 
 		if((count > 0 && count % 100 == 0)) {
 			writeToFile();
@@ -44,7 +47,6 @@ public class PreProcess {
 //			writeToFile();
 //			System.exit(0);
 //		}
-		count++;
 		return 0;
 	}
 
@@ -127,6 +129,7 @@ public class PreProcess {
 		title = title.replaceAll("\\{.*\\}", "");
 		title = title.replaceAll("\\[.*\\]", "");
 		title = title.replaceAll("\\(.*\\)", "");
+		title = title.replaceAll("[^a-zA-Z0-9 ]", " ");
 		titleMap = new HashMap<String, Integer>();
 		StringTokenizer tokenizer = new StringTokenizer(title);
 		englishStemmer stemmer = new englishStemmer();

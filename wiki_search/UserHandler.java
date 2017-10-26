@@ -45,7 +45,7 @@ class UserHandler extends DefaultHandler {
 		else if (qName.equalsIgnoreCase("page")) {
 			//System.out.println("End Element :" + qName);
 			idFound = false;
-			System.out.println(title);
+			//System.out.println(title);
 			PreProcess pObj = new PreProcess();
 			pObj.processPage(id, title, text.toString(), false);
 		}
