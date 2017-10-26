@@ -8,9 +8,8 @@ public class Globals {
 	static Set<String> stopwords;
 	static int levelLimit = 100;
 	static char topLevel = 'A';
-	//TODO To be made dynamic
+	static char maxLevel = 'C';
 	static int docCount = 5311;
-	//TODO to be made user defined
 	static String outFilePath = "//home//ravi//Documents//IRE//indexFiles//";
 	static String[] stpWrdArr={ "without", "see", "unless", "due", "also", "must", "might", "like", "]", "[", "}", "{",
 			"<", ">", "?", "\"", "\\", "/", ")", "(", "will", "may", "can", "much", "every", "the", "in", "other",

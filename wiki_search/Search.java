@@ -22,8 +22,8 @@ public class Search {
 		ArrayList <List <String>> allResults = new ArrayList<List<String>>();
 
 		for(int i=0; i<tokens.size(); i++) {
-			String result = searchToken('C', tokens.get(i), 1);
-			System.out.println(result);
+			String result = searchToken(Globals.maxLevel, tokens.get(i), 1);
+			//System.out.println(result);
 
 			if(result != null) {
 				allResults.add(Arrays.asList(result.split("\\$")));

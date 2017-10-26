@@ -34,15 +34,12 @@ public class Engine {
 
 	public void mergeIndexes() {
 		File files[] = new File(Globals.outFilePath).listFiles();
-		//Arrays.sort(files);
 		int fileCount = files.length; 
 
 		while(fileCount > 1) {
 			int outCount = 1;
 
 			for(int i=1; (i+1)<=fileCount; i+=2) {
-				//File file1 = new File(files[i-1]);
-				//File file2 = new File(files[i]);
 				mergeFiles(files[i-1], files[i], outCount);
 				outCount++;
 			}
@@ -79,7 +76,6 @@ public class Engine {
 
 					if(comp == 0) {
 						//merge
-						//String merged = mergeFrequencies(key1, lineSplit1[1], lineSplit2[1]);
 						String merged = key1 + ":" + lineSplit1[1] + lineSplit2[1];
 						writer.println(merged);
 						line1 = br1.readLine();
@@ -208,7 +204,10 @@ public class Engine {
 	}
 
 	private void createOneLevel(char currLevel, List<File> files) {
-		if(files.size() == 1)return;
+		if(files.size() == 1) {
+			writeMaxLevel(--currLevel);
+			return;
+		}
 		
 		List <File> filesForNextLevel = new ArrayList<File>();
 		int fileCount = 1, keysCount = 1, outLinesCount = 0;
@@ -252,5 +251,16 @@ public class Engine {
 		}
 		
 		createOneLevel(++currLevel, filesForNextLevel);
+	}
+
+	private void writeMaxLevel(char currLevel) {
+		File maxLevelFile = new File(Globals.outFilePath+"maxLevel");
+		try {
+			PrintWriter writer = new PrintWriter(maxLevelFile, "UTF-8");
+			writer.println(currLevel);
+			writer.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

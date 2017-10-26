@@ -22,7 +22,6 @@ public class PreProcess {
 		if(isLast) {
 			writeToFile();
 			treeMap.clear();
-			Globals.docCount = count;
 			return 0;
 		}
 		body = cleanBody(body);
@@ -66,6 +65,8 @@ public class PreProcess {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		Globals.docCount = count;
 	}
 
 	private void addToTreeMap(String id) {
