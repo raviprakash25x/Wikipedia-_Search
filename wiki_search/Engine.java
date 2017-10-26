@@ -106,17 +106,15 @@ public class Engine {
 			writer.close();
 			file1.delete();
 			file2.delete();
-			//File newFileName = new File(Globals.outFilePath+outCount);
 			outFile.renameTo(file1);
-			//TODO delete old files and rename temp, close writer
+			//delete old files and rename temp, close writer
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void createLevels() {
-		char currLevel = 'A';
-		//List<File> files = Arrays.asList(new File(Globals.outFilePath).listFiles());
+		char currLevel = Globals.topLevel;
 		List<File> files = divideFiles(currLevel++);
 		createOneLevel(currLevel, files);
 	}
@@ -126,6 +124,7 @@ public class Engine {
 		ArrayList<File> filesForNextLevel = new ArrayList<File>();
 
 		try {
+			//TODO this original file can be deleted as of no use after division
 			BufferedReader br = new BufferedReader(new FileReader(files[0].getAbsolutePath()));
 			String line = br.readLine();
 			int fileCount = 1, lineCount = 0;
