@@ -6,11 +6,11 @@ import java.io.InputStreamReader;
 public class Wiki_Main {
 
 	public static void main(String[] args) {
-		if(args.length != 1) {
-			System.out.println("Invalid args! Enter xml file path");
+		if(args.length != 2) {
+			System.out.println("Invalid args! Enter xml file path and output Folder");
 			System.exit(1);
 		}
-		//System.out.println(Globals.xml_file_path);
+		Globals.outFilePath = args[1];
 		Globals.populateStopWords();
 
 		while(true) {
@@ -26,6 +26,7 @@ public class Wiki_Main {
 				handleSearch();
 				break;
 			case 0:System.exit(0);
+			default: System.out.println("Invalid option!");
 			}
 		}
 	}
@@ -60,8 +61,8 @@ public class Wiki_Main {
 
 	private static void generateIndex() {
 		Engine engine = new Engine();
-		//engine.parseXML();
-		//engine.mergeIndexes();
+		engine.parseXML();
+		engine.mergeIndexes();
 		engine.createLevels();
 	}
 }

@@ -13,11 +13,8 @@ import org.tartarus.snowball.ext.englishStemmer;
 
 public class PreProcess {
 	static int count = 0;
-	//ArrayList <String> tokens;
 	Map <String, Integer> map;
 	Map <String, Integer> titleMap;
-	//ArrayList <String> tokens_title;
-	//TreeMap <String, ArrayList < HashMap <String, ArrayList<Integer >>>> treeMap;
 	static TreeMap <String, ArrayList<Integer>> treeMap = new TreeMap<String, ArrayList<Integer>>();
 	//treemap contains key: id,countBody, countTitle, id,countBody, countTitle,....
 
@@ -29,13 +26,9 @@ public class PreProcess {
 			return 0;
 		}
 		body = cleanBody(body);
-		//System.out.println(body);
-		//System.out.println(count+" "+body.substring(0, Math.min(100, body.length())));
 		tokenizeBody(body);
 		tokenizeTitle(title);
-		//stemWords();
 		addToTreeMap(id);
-		//System.out.println(count);
 		count++;
 
 		if((count > 0 && count % 100 == 0)) {
@@ -43,10 +36,6 @@ public class PreProcess {
 			treeMap.clear();
 		}
 
-//		if(count == 2) {
-//			writeToFile();
-//			System.exit(0);
-//		}
 		return 0;
 	}
 
@@ -123,7 +112,6 @@ public class PreProcess {
 	}
 
 	private void tokenizeTitle(String title) {
-		//tokens_title = new ArrayList<String>();
 		//TODO do not remove content inside braces
 		title = title.toLowerCase();
 		title = title.replaceAll("\\{.*\\}", "");
@@ -150,18 +138,14 @@ public class PreProcess {
 	}
 
 	private String cleanBody(String body) {
+		//TODO can be improved
 		body = body.toLowerCase();
 		body = body.replaceAll("\\{\\{.*?\\}\\}", "");
-		//body = body.replaceAll("\\[.*\\]", "");
-		//body = body.replaceAll("[\\[\\]]", "");
 		body = body.replaceAll("[^a-zA-Z ]", " ");//spaces not removed
-		//body = body.replaceAll(arg0, arg1)
-		//String strippedInput = input.replaceAll("\\W", ""); //replaces only words
 		return body;
 	}
 
 	private void tokenizeBody(String body) {
-		//tokens = new ArrayList<String> ();
 		map = new HashMap<String, Integer>();
 		StringTokenizer tokenizer = new StringTokenizer(body);
 		englishStemmer stemmer = new englishStemmer();
@@ -170,7 +154,6 @@ public class PreProcess {
 			String curr = tokenizer.nextToken();
 
 			if(!Globals.stopwords.contains(curr) && curr.length() <= 15) {
-				//tokens.add(curr);
 				stemmer.setCurrent(curr);
 				stemmer.stem();
 				curr = stemmer.getCurrent();
@@ -184,15 +167,4 @@ public class PreProcess {
 			}
 		}
 	}
-
-	//	private void stemWords(){
-	//		englishStemmer stemmer = new englishStemmer();
-	//
-	//		for(int i=0; i<tokens.size(); i++) {
-	//			stemmer.setCurrent(tokens.get(i));
-	//			stemmer.stem();
-	//			tokens.set(i,stemmer.getCurrent());
-	//			//System.out.println(tokens.get(i));
-	//		}
-	//	}
 }

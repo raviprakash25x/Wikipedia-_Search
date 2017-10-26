@@ -201,8 +201,8 @@ public class Engine {
 	}
 
 	private Float getTfIdf(int freqBody, int freqTitle, int totalDocOccurence) {
-		//TODO handle importance of title
-		int tf = freqBody + freqTitle;
+		//Title given 10x importance
+		int tf = freqBody + (freqTitle*10);
 		Float idf =  (float) (Math.log(Globals.docCount)/(1f+totalDocOccurence));
 		return tf*idf;
 	}

@@ -4,6 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.tartarus.snowball.ext.englishStemmer;
 
@@ -11,26 +19,86 @@ public class Search {
 
 	public void searchQuery(String query) {
 		ArrayList<String> tokens = pruneQuery(query);
-		ArrayList <String> allResults = new ArrayList<String>();
+		ArrayList <List <String>> allResults = new ArrayList<List<String>>();
 
 		for(int i=0; i<tokens.size(); i++) {
 			String result = searchToken('C', tokens.get(i), 1);
 			System.out.println(result);
-			
+
 			if(result != null) {
-				allResults.add(result);
+				allResults.add(Arrays.asList(result.split("\\$")));
 			}
+		}
+
+		if(allResults.size() == 0) {
+			System.out.println("Search query returned 0 results!");
+		}
+		else {
+			processResults(allResults);
 		}
 	}
 
+	private void processResults(ArrayList<List<String>> allResults) {
+
+		Map <String, Float> processedResults = new HashMap<String, Float>();
+
+		for(int i=0; i<allResults.size(); i++) {
+
+			for(int j=0; j<allResults.get(i).size(); j++) {
+				String tokens[] = allResults.get(i).get(j).split(",");
+				String docId = tokens[0];
+				float tf_idf = Float.parseFloat(tokens[1]);
+
+				if(processedResults.containsKey(docId)) {
+					processedResults.put(docId, processedResults.get(docId)+tf_idf);
+				}
+				else {
+					processedResults.put(docId, tf_idf);
+				}
+			}
+		}
+
+		Iterator<Entry<String, Float>> it = processedResults.entrySet().iterator();
+		TreeMap <Float, ArrayList <String> > sortedMap = 
+				new TreeMap<Float, ArrayList<String>>(Collections.reverseOrder());
+
+		while(it.hasNext()) {
+			Map.Entry<String, Float> pair = it.next();
+
+			if(sortedMap.containsKey(pair.getValue())) {
+				sortedMap.get(pair.getValue()).add(pair.getKey());
+			}
+			else {
+				ArrayList <String> temp = new ArrayList<String>();
+				temp.add(pair.getKey());
+				sortedMap.put(pair.getValue(), temp);
+			}
+
+		}
+
+		displayResults(sortedMap);
+	}
+
+	private void displayResults(TreeMap<Float, ArrayList<String>> sortedMap) {
+		Iterator<Entry<Float, ArrayList <String> >> it = sortedMap.entrySet().iterator();
+		int count = 0;
+
+		while(count < 10 && it.hasNext()) {
+			Map.Entry<Float, ArrayList <String> > pair = it.next();
+
+			for(int i=0; i<pair.getValue().size() && count < 10; i++) {
+				System.out.println(++count+ ". "+ pair.getValue().get(i));
+			}
+		}
+
+		System.out.println();
+	}
+
 	private String searchToken(char currLevel, String key, int fileCount) {
-		//fileCount = ((fileCount-1)*Globals.levelLimit) + fileCount;
-		
 		if(currLevel == Globals.topLevel) {
 			return fetchResult(key, fileCount);
 		}
 
-		//for(int i=1; i<=fileCount; i++) {
 		BufferedReader br;
 
 		try {
@@ -56,7 +124,7 @@ public class Search {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		//}
+		
 		return null;
 	}
 
@@ -65,12 +133,12 @@ public class Search {
 			File finalFile = new File(Globals.outFilePath+Globals.topLevel+fileCount);
 			BufferedReader br = new BufferedReader(new FileReader(finalFile));
 			String line = br.readLine();
-			
+
 			while(line != null) {
-				
+
 				if(key.compareTo(line) <= 0) {
 					String tokens[] = line.split(":");
-					
+
 					if(tokens[0].equals(key)) {
 						br.close();
 						return tokens[1];
@@ -89,7 +157,8 @@ public class Search {
 
 	private ArrayList<String> pruneQuery(String query) {
 		query = query.toLowerCase();
-		query = query.replaceAll("[^a-zA-Z ]", " ");//spaces not removed
+		query = query.replaceAll("[^a-zA-Z0-9 ]", " ");//spaces not removed
+		query = query.trim();
 		String tokens[] = query.split(" ");
 		ArrayList <String> prunedTokens = new ArrayList<String>();
 		englishStemmer stemmer = new englishStemmer();
